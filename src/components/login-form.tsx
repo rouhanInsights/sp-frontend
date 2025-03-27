@@ -36,7 +36,7 @@ export function LoginForm({
 
       if (response.access_token) {
         localStorage.setItem("access_token", response.access_token);
-        setMessage("✅ Login successful! Redirecting...");
+        setMessage("Redirecting...");
         setTimeout(() => router.push("/dashboard"), 1500);
       } else if (response.detail) {
         setMessage(`❌ ${response.detail}`);
@@ -92,7 +92,7 @@ export function LoginForm({
           Login
         </Button>
 
-        {message && <p className="text-red-500 mt-2 text-center">{message}</p>}
+        {message && <p className="text-blue-300 mt-2 text-center">{message}</p>}
 
         <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
           <span className="relative z-10 bg-background px-2 text-muted-foreground">

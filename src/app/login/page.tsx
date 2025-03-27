@@ -11,32 +11,21 @@ export default function LoginPage() {
   useEffect(() => {
     const checkLogin = async () => {
       const token = localStorage.getItem("access_token");
-      if (!token) return; // no token, show login
+      if (!token) return;
   
-      try {
-        const response = await fetch("http://127.0.0.1:8000/users/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+      const response = await fetch("http://127.0.0.1:8000/users/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await response.json();
   
-        const data = await response.json();
-  
-        if (response.ok && !data.detail) {
-          // only redirect if token is valid and user is real
-          router.push("/dashboard");
-        } else {
-          localStorage.removeItem("access_token"); // token is bad, clear it
-        }
-      } catch (err) {
-        localStorage.removeItem("access_token"); // in case of network failure
+      if (response.ok && !data.detail) {
+        router.push("/dashboard");
+      } else {
+        localStorage.removeItem("access_token");
       }
     };
-  
     checkLogin();
-  }, []);
-  
-
+  }, []); 
 
   return (
     <div className="grid min-h-svh lg:grid-cols-2">

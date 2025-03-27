@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getUserInfo } from "../../../utils/api"; // updated path
 import { AppSidebar } from "@/components/app-sidebar";
+import { Button } from "@/components/ui/button";
+import {LogOut} from "lucide-react"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -27,11 +29,7 @@ export default function Page() {
     async function fetchUser() {
       try {
         const data = await getUserInfo();
-
-        if (
-          data.detail === "No token found" ||
-          data.detail === "Invalid token or expired"
-        ) {
+        if (!data || data.detail) {
           localStorage.removeItem("access_token");
           router.push("/login");
         } else {
@@ -44,40 +42,45 @@ export default function Page() {
         setLoading(false);
       }
     }
-
+  
     fetchUser();
   }, [router]);
+  
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <p className="text-lg font-semibold">Loading dashboard...</p>
-      </div>
-    );
+    return <div className="text-center p-10">Loading...</div>; // Prevent flicker
   }
 
   return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2">
-          <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 h-4" />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Hello! {user?.name || "User"}
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Welcome to speech fix</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
+      <header className="flex h-16 shrink-0 items-center justify-between px-4">
+        <div className="flex items-center gap-2">
+          <SidebarTrigger className="-ml-1" />
+          <Separator orientation="vertical" className="mr-2 h-4" />
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbLink href="#">Hello! {user?.name || "User"}</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Welcome to the dashboard </BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+        <Button
+            onClick={() => {
+              localStorage.removeItem("access_token");
+              router.push("/login");
+            }}
+            variant="outline"
+            className="text-sm"
+          ><LogOut />
+            Logout
+          </Button>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="grid auto-rows-min gap-4 md:grid-cols-3">

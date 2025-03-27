@@ -43,9 +43,9 @@ export async function login(userData) {
 // Logout Function (Deletes Token)
 export function logout() {
   localStorage.removeItem("access_token");
+  sessionStorage.clear(); // <- just in case
   window.location.href = "/login";
 }
-
 
 // Get Logged-In User Info (Protected API)
 export async function getUserInfo() {
@@ -62,26 +62,42 @@ export async function getUserInfo() {
   return await response.json();
 }
 
-//password reset
-// export async function requestPasswordReset(email) {
-//   const response = await fetch("http://127.0.0.1:8000/auth/forgot-password", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({ email }),
-//   });
+export async function requestPasswordReset(email) {
+  const response = await fetch("http://127.0.0.1:8000/auth/forgot-password", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+  });
 
-//   return response.json();
-// }
-// export async function resetPassword(data) {
-//   const response = await fetch("http://127.0.0.1:8000/auth/reset-password", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(data),
-//   });
+  return response.json();
+}
 
-//   return response.json();
-// }
+export async function resetPassword(data) {
+  const response = await fetch("http://127.0.0.1:8000/auth/reset-password", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  return response.json();
+}
+
+export async function sendAudioToPipeline(audioFile) {
+  const formData = new FormData();
+  formData.append("audio", audioFile);
+
+  const response = await fetch("http://localhost:8000/ai/pipeline", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to process audio.");
+  }
+
+  return response.json();
+}

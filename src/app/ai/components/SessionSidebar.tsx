@@ -2,20 +2,15 @@
 
 import * as React from "react"
 import {
-  BookOpen,
   Bot,
   Command,
-  Frame,
   LifeBuoy,
-  Map,
-  PieChart,
   Send,
-  Settings2,
+  BookOpen,
   SquareTerminal,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
-// import { NavProjects } from "@/components/nav-projects"
 import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
 import {
@@ -36,49 +31,16 @@ const data = {
   },
   navMain: [
     {
-      title: "Home",
+      title: "Saved files",
       url: "#",
-      icon: SquareTerminal,
+      icon: BookOpen,
       isActive: true,
       items: [
         {
-          title: "Speech-fix",
-          url: "/ai",
-        },
-        {
-          title: "Saved files",
-          url: "#",
-        },
-        {
-            title: "Features and updates",
-            url: "#",
-        },
-      ],
-    },
-    {
-      title: "User Management",
-      url: "#",
-      icon: Bot,
-      isActive: true,
-      items: [
-        {
-            title: "Profile",
-            url: "#",
-          },
-        {
-          title: "Progress tracking",
-          url: "#",
-        },
-        {
-          title: "Subscription",
+          title: "files-name",
           url: "#",
         },
       ],
-    },
-    {
-        title: "Help center",
-        url: "#",
-        icon: Settings2,
     },
   ],
   navSecondary: [
@@ -93,26 +55,9 @@ const data = {
       icon: Send,
     },
   ],
-//   projects: [
-//     {
-//       name: "Design Engineering",
-//       url: "#",
-//       icon: Frame,
-//     },
-//     {
-//       name: "Sales & Marketing",
-//       url: "#",
-//       icon: PieChart,
-//     },
-//     {
-//       name: "Travel",
-//       url: "#",
-//       icon: Map,
-//     },
-//   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+function SessionSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -143,3 +88,4 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   )
 }
 
+export default SessionSidebar;
