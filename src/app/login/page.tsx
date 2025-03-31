@@ -35,6 +35,7 @@ export default function LoginPage() {
         <Image
           src="/home/image (3).jpeg"
           alt="Image"
+          fill
           className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
       </div>

@@ -30,6 +30,12 @@ function formatMonthYear(dateStr: string) {
   return date.toLocaleString("default", { month: "long", year: "numeric" });
 }
 
+// Define session type
+type Session = {
+  id: number;
+  created_at: string;
+};
+
 function SessionSidebar({
   onSessionSelect,
   onNewChat,
@@ -53,10 +59,10 @@ function SessionSidebar({
   React.useEffect(() => {
     async function fetchAndGroupSessions() {
       try {
-        const sessions = await getUserSessions();
+        const sessions: Session[] = await getUserSessions();
 
         // Group sessions by month-year
-        const grouped: { [month: string]: any[] } = {};
+        const grouped: { [month: string]: Session[] } = {};
         for (const session of sessions) {
           const month = formatMonthYear(session.created_at);
           if (!grouped[month]) grouped[month] = [];
@@ -67,11 +73,9 @@ function SessionSidebar({
         const formattedItems: { title: string; url: string; onClick?: () => void }[] = [];
 
         Object.entries(grouped).forEach(([month, sessions]) => {
-          // Push month heading
           formattedItems.push({ title: `📅 ${month}`, url: "#" });
 
-          // Push all sessions under that month
-          sessions.forEach((session) => {
+          sessions.forEach((session: Session) => {
             formattedItems.push({
               title: `Session #${session.id}`,
               url: "#",
@@ -80,7 +84,6 @@ function SessionSidebar({
           });
         });
 
-        // Inject into navMain format
         setNavMainItems([
           {
             title: "Saved files",
@@ -98,7 +101,7 @@ function SessionSidebar({
     }
 
     fetchAndGroupSessions();
-  }, []);
+  }, [onSessionSelect]);
 
   const sidebarData = {
     user: {
@@ -151,6 +154,7 @@ function SessionSidebar({
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
+
       <SidebarContent>
         {loading ? (
           <div className="text-sm text-muted-foreground p-4">Loading sessions...</div>
