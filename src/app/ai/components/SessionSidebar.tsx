@@ -8,7 +8,7 @@ import {
   BookOpen,
   Plus,
 } from "lucide-react";
-
+import type { LucideIcon } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
@@ -45,14 +45,15 @@ function SessionSidebar({
   onNewChat?: () => void;
 } & React.ComponentProps<typeof Sidebar>) {
   const [navMainItems, setNavMainItems] = React.useState<
-    {
-      title: string;
-      url: string;
-      icon: any;
-      isActive: boolean;
-      items: { title: string; url: string; onClick?: () => void }[];
-    }[]
-  >([]);
+  {
+    title: string;
+    url: string;
+    icon: LucideIcon;
+    isActive: boolean;
+    items: { title: string; url: string; onClick?: () => void }[];
+  }[]
+>([]);
+
 
   const [loading, setLoading] = React.useState(true);
 
@@ -72,7 +73,7 @@ function SessionSidebar({
         // Flatten into one-level array with fake group headers
         const formattedItems: { title: string; url: string; onClick?: () => void }[] = [];
 
-        Object.entries(grouped).forEach(([month, sessions]) => {
+        Object.entries(grouped).forEach(([month, sessions]: [string, Session[]]) => {
           formattedItems.push({ title: `📅 ${month}`, url: "#" });
 
           sessions.forEach((session: Session) => {
