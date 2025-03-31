@@ -86,18 +86,73 @@ export async function resetPassword(data) {
   return response.json();
 }
 
+// export async function sendAudioToPipeline(audioFile) {
+//   const formData = new FormData();
+//   formData.append("audio", audioFile);
+
+//   const response = await fetch("http://localhost:8000/ai/pipeline", {
+//     method: "POST",
+//     body: formData,
+//   });
+
+//   if (!response.ok) {
+//     throw new Error("Failed to process audio.");
+//   }
+
+//   return response.json();
+// }
+
 export async function sendAudioToPipeline(audioFile) {
+  const token = getToken(); // ✅ use your helper
+
   const formData = new FormData();
   formData.append("audio", audioFile);
 
-  const response = await fetch("http://localhost:8000/ai/pipeline", {
+  const response = await fetch(`${BASE_URL}/ai/pipeline`, {
     method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`, // ✅ pass token
+    },
     body: formData,
   });
 
   if (!response.ok) {
-    throw new Error("Failed to process audio.");
+    const errorText = await response.text();
+    throw new Error(errorText || "Failed to process audio.");
   }
 
   return response.json();
 }
+export async function getUserSessions() {
+  const token = localStorage.getItem("access_token");
+
+  const response = await fetch("http://localhost:8000/ai/sessions", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || "Failed to fetch user sessions.");
+  }
+
+  return response.json();
+}
+export async function getSessionById(id) {
+  const token = localStorage.getItem("access_token");
+
+  const response = await fetch(`http://localhost:8000/ai/session/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to load session");
+  }
+
+  return response.json();
+}
+

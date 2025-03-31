@@ -1,12 +1,11 @@
-import { Button } from "@/components/ui/button";
+import HeroSection from "@/app/homecomponent/hero/hero";
+import Navbar from "@/app/homecomponent/navbar/navbar";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-     <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-    <Button><a href="/login">Login</a></Button>
-    </div>
+    <main className="relative min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('/home/image (20).jpeg')" , backgroundSize: "cover", backgroundRepeat: "no-repeat", }}>
+      <Navbar />
+      <HeroSection />
+    </main>
   );
 }

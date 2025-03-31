@@ -14,6 +14,8 @@ interface ResultBlockProps {
 }
 
 const ResultBlock: React.FC<ResultBlockProps> = ({ result }) => {
+  const BASE_AUDIO_URL = "https://7666-34-124-217-96.ngrok-free.app";
+
   return (
     <div className="w-full space-y-6">
       <div className="space-y-2">
@@ -25,7 +27,7 @@ const ResultBlock: React.FC<ResultBlockProps> = ({ result }) => {
         <label className="font-semibold">Enhanced Text:</label>
         <Textarea readOnly value={result.enhanced_text} />
         <AudioPlayer
-          src={`http://localhost:8000${result.enhanced_audio_url}`}
+          src={`${BASE_AUDIO_URL}${result.enhanced_audio_url}`} // ✅ Full URL
           label="Enhanced Audio"
           downloadName="enhanced_audio.mp3"
         />
@@ -35,7 +37,7 @@ const ResultBlock: React.FC<ResultBlockProps> = ({ result }) => {
         <label className="font-semibold">Enriched Text:</label>
         <Textarea readOnly value={result.enriched_text} />
         <AudioPlayer
-          src={`http://localhost:8000${result.enriched_audio_url}`}
+          src={`${BASE_AUDIO_URL}${result.enriched_audio_url}`} // ✅ Full URL
           label="Enriched Audio"
           downloadName="enriched_audio.mp3"
         />

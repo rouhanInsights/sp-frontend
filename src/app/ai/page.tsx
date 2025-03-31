@@ -1,17 +1,14 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getUserInfo } from "../../../utils/api"; // updated path
-import { Input } from "@/components/ui/input";
+import { getUserInfo, getSessionById  } from "../../../utils/api"; // updated path
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { sendAudioToPipeline } from "../../../utils/api";
 import SessionSidebar from "./components/SessionSidebar";
 import UploadBlock from "./components/UploadBlock";
 import ResultBlock from "./components/ResultBlock";
 import Loader from "./components/Loader";
-import { useSidebar } from "@/components/ui/sidebar";
 import {LogOut} from "lucide-react"
 import {
   Breadcrumb,
@@ -27,12 +24,6 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
-
-const dummySessions = [
-  { id: "1", label: "Session 1", created_at: "Mar 24, 2025" },
-  { id: "2", label: "Session 2", created_at: "Mar 23, 2025" },
-];
 
 export default function AIPage() {
   const [audioFile, setAudioFile] = useState<File | null>(null);
@@ -74,6 +65,19 @@ export default function AIPage() {
     if (file) setAudioFile(file);
   };
 
+  const handleSessionClick = async (sessionId: number) => {
+    try {
+      setLoading(true);
+      setErrorMsg("");
+      const data = await getSessionById(sessionId);
+      setResult(data);
+    } catch (err) {
+      setErrorMsg("❌ Failed to load session.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
   const handleProcess = async () => {
     if (!audioFile) {
       setErrorMsg("Please upload an audio file.");
@@ -85,7 +89,8 @@ export default function AIPage() {
 
     try {
       const res = await sendAudioToPipeline(audioFile);
-      setResult(res);
+      setResult(res.data);
+      console.log("✅ AI response:", res);
     } catch (err) {
       setErrorMsg("❌ Failed to process audio. Check your backend.");
       console.error(err);
@@ -96,7 +101,10 @@ export default function AIPage() {
 
   return (
     <SidebarProvider>
-          <SessionSidebar />
+          <SessionSidebar onSessionSelect={handleSessionClick}  onNewChat={() => {
+    setResult(null);
+    setErrorMsg("");
+  }}/>
           <SidebarInset>
           <header className="flex h-16 shrink-0 items-center justify-between px-4">
             <div className="flex items-center gap-2">
