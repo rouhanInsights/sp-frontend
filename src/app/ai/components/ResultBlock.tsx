@@ -2,6 +2,7 @@
 import React from "react";
 import { Textarea } from "@/components/ui/textarea";
 import AudioPlayer from "./AudioPlayer";
+import FeedbackScore from "./FeedbackScore";
 
 interface ResultBlockProps {
   result: {
@@ -10,12 +11,18 @@ interface ResultBlockProps {
     enriched_text: string;
     enhanced_audio_url: string;
     enriched_audio_url: string;
+    ai_feedback?: {
+      clarity: number;
+      fluency: number;
+      correctness: number;
+      suggestion: string;
+      overall_score: number;
+    };
   };
 }
 
-const ResultBlock: React.FC<ResultBlockProps> = ({ result }) => {
-  const BASE_AUDIO_URL = "https://7666-34-124-217-96.ngrok-free.app";
 
+const ResultBlock: React.FC<ResultBlockProps> = ({ result }) => {
   return (
     <div className="w-full space-y-6">
       <div className="space-y-2">
@@ -27,7 +34,7 @@ const ResultBlock: React.FC<ResultBlockProps> = ({ result }) => {
         <label className="font-semibold">Enhanced Text:</label>
         <Textarea readOnly value={result.enhanced_text} />
         <AudioPlayer
-          src={`${BASE_AUDIO_URL}${result.enhanced_audio_url}`} // ✅ Full URL
+          src={result.enhanced_audio_url}
           label="Enhanced Audio"
           downloadName="enhanced_audio.mp3"
         />
@@ -37,11 +44,17 @@ const ResultBlock: React.FC<ResultBlockProps> = ({ result }) => {
         <label className="font-semibold">Enriched Text:</label>
         <Textarea readOnly value={result.enriched_text} />
         <AudioPlayer
-          src={`${BASE_AUDIO_URL}${result.enriched_audio_url}`} // ✅ Full URL
+          src={result.enriched_audio_url}
           label="Enriched Audio"
           downloadName="enriched_audio.mp3"
         />
       </div>
+
+      {/* ✅ Pronunciation Feedback Score */}
+      {result.ai_feedback?.overall_score !== undefined && (
+    <FeedbackScore feedback={result.ai_feedback} />
+    )}
+    {/* {result.feedback_score && <FeedbackScore feedback={result.feedback_score} />} */}
     </div>
   );
 };
